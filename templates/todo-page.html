@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}My Todos{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Add Todo Form -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Add New Todo</h5>
+                <form id="todoForm">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Todo title" required minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" class="form-control" id="description" name="description" placeholder="Short description" required minlength="3" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select class="form-control" id="priority" name="priority" required>
+                            <option value="1">1 – Critical</option>
+                            <option value="2">2 – High</option>
+                            <option value="3" selected>3 – Medium</option>
+                            <option value="4">4 – Low</option>
+                            <option value="5">5 – Minimal</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block main-color border-0">Add Todo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Todo List -->
+    <div class="col-md-8">
+        <h5 class="mb-3">My Todos <span class="badge badge-secondary">{{ todos | length }}</span></h5>
+        {% if todos %}
+            {% for todo in todos %}
+            <div class="card mb-2 shadow-sm">
+                <div class="card-body d-flex align-items-center justify-content-between py-2">
+                    <div>
+                        <span class="badge badge-pill
+                            {% if todo.priority == 1 %}badge-danger
+                            {% elif todo.priority == 2 %}badge-warning
+                            {% elif todo.priority == 3 %}badge-info
+                            {% elif todo.priority == 4 %}badge-primary
+                            {% else %}badge-secondary{% endif %} mr-2">
+                            P{{ todo.priority }}
+                        </span>
+                        <span class="{% if todo.complete %}strike-through-td text-muted{% endif %}">
+                            {{ todo.title }}
+                        </span>
+                        <small class="text-muted d-block ml-4 pl-1">{{ todo.description }}</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        {% if todo.complete %}
+                            <span class="badge badge-success mr-2">Done</span>
+                        {% endif %}
+                        <a href="/todos/edit-todo-page/{{ todo.id }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card shadow-sm">
+                <div class="card-body text-center text-muted py-5">
+                    <p class="mb-0">No todos yet. Add one using the form!</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
